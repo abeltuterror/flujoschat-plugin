@@ -3,7 +3,7 @@
   "description": "Plugins oficiales de FlujosChat para Claude Code",
   "owner": {
     "name": "FlujosChat",
-    "url": "https://www.flujoschat.com"
+    "url": "https://www.flujoschat.foo"
   },
   "plugins": [
     {
@@ -11,7 +11,7 @@
       "description": "Crea y edita flujos de WhatsApp y agentes IA en FlujosChat",
       "version": "1.0.0",
       "source": "github",
-      "repository": "abeltuterror/flujoschat-plugin",
+      "repository": "https://github.com/abeltuterror/flujoschat-plugin",
       "path": ".",
       "category": "integrations"
     }

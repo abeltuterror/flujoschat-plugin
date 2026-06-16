@@ -18,8 +18,8 @@ directamente desde Claude, vía un servidor **MCP remoto** protegido con **OAuth
 ## Instalación
 
 ```bash
-# 1. Añade el marketplace (reemplaza por tu repo si publicas un fork)
-/plugin marketplace add abeltuterror/flujoschat-plugin
+# 1. Añade el marketplace (usa SIEMPRE la URL HTTPS, no el atajo owner/repo)
+/plugin marketplace add https://github.com/abeltuterror/flujoschat-plugin
 
 # 2. Instala el plugin
 /plugin install flujoschat@flujoschat-marketplace
