@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "flujoschat": {
+      "type": "http",
+      "url": "https://api.flujoschat.foo/api/v1/mcp"
+    }
+  }
+}
