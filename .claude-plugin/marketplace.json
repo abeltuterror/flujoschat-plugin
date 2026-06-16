@@ -10,9 +10,10 @@
       "name": "flujoschat",
       "description": "Crea y edita flujos de WhatsApp y agentes IA en FlujosChat",
       "version": "1.0.0",
-      "source": "github",
-      "repository": "https://github.com/abeltuterror/flujoschat-plugin",
-      "path": ".",
+      "source": {
+        "source": "github",
+        "repo": "abeltuterror/flujoschat-plugin"
+      },
       "category": "integrations"
     }
   ]
