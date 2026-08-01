@@ -21,9 +21,13 @@ Requiere el servidor MCP de FlujosChat conectado y **rol OWNER o ADMIN** para es
 2. **Prepara dependencias si hace falta:**
    - Categoría RAG → `create_knowledge_category` (`name`, `description?`).
    - Herramienta → `create_ai_tool`:
-     - HTTP: `{ name, description, type:"HTTP", config:{ url, method?, params? }, authSecret? }`
+     - HTTP: `{ name, description, type:"HTTP", config:{ url, method?, params? } }`
      - MCP: `{ name, description, type:"MCP", config:{ serverUrl } }`
      - `name` en snake_case (`^[a-z][a-z0-9_]{1,63}$`).
+     - **Nunca pidas una credencial al usuario por el chat.** El MCP rechaza las claves y
+       las cabeceras de autorización (también dentro de `config.headers`): quedarían escritas
+       en la conversación. Si el endpoint necesita autenticación, crea la herramienta sin ella
+       y dile al usuario que añada la cabecera en el panel, en la ficha de la herramienta.
 
 3. **Crea el agente:** `create_agent` con `name`, `instructions` (system prompt claro y específico),
    `model?`, `handoffDescription?` (cómo lo ven otros agentes), `categoryIds?`, `toolIds?`.
