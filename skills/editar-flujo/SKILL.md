@@ -18,9 +18,15 @@ Requiere el servidor MCP de FlujosChat conectado.
      usa **`update_flow`** con `flowId` y solo los campos a cambiar.
    - **Duplicar:** **`duplicate_flow`** (`flowId`, `newName`). El clon queda inactivo.
    - **Eliminar:** **`delete_flow`** (`flowId`). Irreversible — confirma con el usuario.
-   - **Reestructurar pasos/transiciones:** las tools MCP no editan pasos uno a uno. Construye un
-     `{ flow, steps }` corregido (ver la skill `crear-flujo` y su validador) y crea un flujo nuevo
-     con **`create_flow`**; o indica al usuario que ajuste los pasos en el editor visual del panel.
+   - **Imagen de un paso:** **`set_flow_step_image`** (`flowId`, `stepOrder` o `stepId`, `imageUrl`
+     o `null` para quitarla) pone o quita la portada de un paso con botones o la imagen de un
+     paso IMAGE sin recrear el flujo. La URL sale de **`upload_flow_image`** (base64 o una
+     `sourceUrl` pública); **`list_flow_images`** enseña las ya subidas para reutilizarlas. Solo un
+     paso BUTTONS admite portada: en una lista se guardaría y nunca se enviaría.
+   - **Reestructurar pasos/transiciones:** las tools MCP no editan pasos uno a uno. Parte del
+     `{ flow, steps }` que devuelve `get_flow`, corrígelo (ver la skill `crear-flujo` y su
+     validador) y crea un flujo nuevo con **`create_flow`**; o indica al usuario que ajuste los
+     pasos en el editor visual del panel. `update_flow` no añade ni cambia pasos.
 
 3. **Confirma** los cambios mostrando el resultado de la tool (y los `warnings` si aplica).
 

@@ -1,13 +1,13 @@
 {
   "name": "flujoschat",
-  "description": "Crea y edita flujos de WhatsApp (JSON) y agentes IA en FlujosChat desde Claude. Úsalo para construir journeys de cliente, automatizaciones y agentes conversacionales.",
-  "version": "1.0.0",
+  "description": "Crea, actualiza y audita agentes y equipos de IA, y crea y edita flujos de WhatsApp en FlujosChat desde Claude. Guía paso a paso, redacta el prompt con buenas prácticas y pide tu acuerdo antes de escribir en tu cuenta.",
+  "version": "1.1.0",
   "author": {
     "name": "FlujosChat",
     "url": "https://www.flujoschat.foo"
   },
   "homepage": "https://www.flujoschat.foo/ayuda",
   "repository": "https://github.com/abeltuterror/flujoschat-plugin",
-  "keywords": ["whatsapp", "crm", "flujos", "chatbot", "automatizacion", "agentes-ia", "mcp"],
+  "keywords": ["whatsapp", "crm", "flujos", "chatbot", "automatizacion", "agentes-ia", "mcp", "prompt", "rag", "handoff"],
   "license": "MIT"
 }
