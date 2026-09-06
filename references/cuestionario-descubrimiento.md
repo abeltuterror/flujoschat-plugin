@@ -52,6 +52,9 @@ rellena un formulario.
 | Pregunta | Por qué | Se traduce en |
 |---|---|---|
 | ¿Debe agendar, mover o cancelar citas reales? | Capacidad integrada de agenda. Requiere que la agenda del negocio esté configurada en el panel (horario, cupo, profesionales). | Capacidad `agenda` atada al agente; política de agenda en el prompt |
+| ¿Usas Google Calendar para tus citas? ¿Quieres que el agente mire ahí las horas ocupadas, o que además cree los eventos? | Capacidades `google_calendar` y `google_calendar_editar`. Requieren que el dueño conecte su cuenta en Configuración → Integraciones → Google, y cada nivel por separado. Mirar y escribir son dos decisiones, no una. | Capacidad atada al agente; en el prompt, cuándo mirar antes de prometer una hora |
+| ¿Hay algo de la conversación que alguien de tu equipo tenga que ver por correo? | Capacidad `google_gmail_enviar`. Pregunta A QUÉ direcciones (hasta 5): el agente no las elige, las fijas tú en el panel y escribe a la lista entera. Si ahí pones el correo de un cliente, ahí llega. | Capacidad atada; en el prompt, el criterio de cuándo avisar |
+| ¿Llevas los interesados o los pedidos en una hoja de cálculo? | Capacidad `google_sheets_anotar`. Pregunta CUÁL hoja y, sobre todo, **qué columnas tiene su primera fila y si los datos van en la primera pestaña**: se escribe al final de esa, no se puede elegir otra. El dueño entrega las hojas una a una desde el panel. | Capacidad atada; en el prompt, qué datos anotar, en qué orden y cuándo |
 | ¿Debe guardar nombre, documento, correo u otros datos en la ficha del cliente? ¿Qué campos personalizados tienes? | Capacidad integrada de ficha. Solo rellena campos que ya existen; no crea campos. | Capacidad `contacto`; variables `{{campo.<slug>}}` |
 | ¿Quieres que ofrezca opciones con botones tocables? | Capacidad integrada de botones: máximo 3 opciones cerradas por mensaje, títulos cortos. | Capacidad `botones`; regla de formato en el prompt |
 | ¿Debe recomendar y arrancar alguno de tus flujos de WhatsApp? | Capacidad integrada de flujos: el agente elige por la descripción del flujo, así que los flujos necesitan una buena descripción. | Capacidad `flujos` |
@@ -97,7 +100,7 @@ Si algún corchete queda vacío, esa es la única pregunta que falta.
 
 | Ref | Qué respalda | Archivo (repo chatboxabel) | Fecha |
 |---|---|---|---|
-| F1 | Las 4 capacidades integradas y sus prerrequisitos | `backend/src/modules/ai/tools/builtin-catalog.js` | 2026-09-05 |
+| F1 | Las capacidades integradas y sus prerrequisitos | `backend/src/modules/ai/tools/builtin-catalog.js` | 2026-09-06 |
 | F5 | La fecha del día la inyecta la plataforma (sin hora) | `backend/src/modules/ai/runtime/fecha-actual.js` | 2026-09-05 |
 | F6 | La herramienta de derivar a humano existe en todo agente | `backend/src/modules/ai/tools/builtin-tools.js` | 2026-09-05 |
 | F7 | Por MCP solo entra texto; los documentos gastan saldo al indexarse | `backend/src/modules/mcp/tools/ai.tools.js` (`create_knowledge_document`) | 2026-09-05 |

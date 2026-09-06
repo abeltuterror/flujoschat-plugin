@@ -1,7 +1,7 @@
 {
   "name": "flujoschat",
   "description": "Crea, actualiza y audita agentes y equipos de IA, y crea y edita flujos de WhatsApp en FlujosChat desde Claude. Guía paso a paso, redacta el prompt con buenas prácticas y pide tu acuerdo antes de escribir en tu cuenta.",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "author": {
     "name": "FlujosChat",
     "url": "https://www.flujoschat.foo"

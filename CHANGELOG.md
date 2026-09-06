@@ -1,5 +1,25 @@
 # Changelog
 
+## 1.2.0 — 2026-09-06
+
+Las cuatro capacidades de Google Workspace, que el servidor ya expone y aquí no se enseñaban:
+un agente podía usarlas y este plugin no sabía que existían.
+
+- **Nuevo** en `references/catalogo-capacidades.md`: `google_calendar` (qué calendarios hay y
+  qué horas están ocupadas), `google_calendar_editar` (crear, mover y cancelar eventos),
+  `google_gmail_enviar` (avisar por correo al equipo) y `google_sheets_anotar` (añadir una fila
+  a una hoja que eligió el dueño), con sus prerrequisitos, sus límites y una sección sobre qué
+  contarle al dueño antes de que las elija.
+- **Nuevo** en `references/cuestionario-descubrimiento.md`: preguntas de descubrimiento para las
+  tres —el calendario, el correo de aviso y la hoja de cálculo—, con lo que hay que preguntar
+  ADEMÁS del «sí quiero»: a qué direcciones, y qué columnas tiene la primera fila de la hoja.
+- **Corregido** en `references/errores-y-costes.md`: se decía que en `run_team` las capacidades
+  integradas «no actúan». Es cierto solo para las herramientas que ESCRIBEN; las que consultan
+  se ejecutan de verdad, y con Google eso sale hacia la cuenta real del dueño. Ya era inexacto
+  antes de Google (`consultar_horarios_libres` nunca se negó en una prueba); Google lo vuelve
+  visible porque ahora la consulta sale de la casa.
+- **Corregido** «las 4 capacidades integradas» en las notas de dos referencias: son ocho.
+
 ## 1.1.0 — 2026-09-05
 
 Skills de agentes de IA reescritos como guías paso a paso, con puertas de acuerdo antes de
