@@ -42,7 +42,7 @@ Los fragmentos de abajo están entre comillas angulares porque son texto literal
 
 | Herramienta | ¿Gasta saldo de IA? | ¿Efecto real? |
 |---|---|---|
-| `run_team` | Sí (llama al modelo) | Ejecuta de verdad las herramientas HTTP y MCP del equipo. Las capacidades integradas no actúan (responden que están en una prueba). No envía WhatsApp |
+| `run_team` | Sí (llama al modelo) | Ejecuta de verdad las herramientas HTTP y MCP del equipo. De las capacidades integradas el corte es por HERRAMIENTA: las que modifican datos se niegan («estás en una prueba»), y las que solo consultan se ejecutan de verdad — con Google eso sale hacia la cuenta real del dueño (sus calendarios, sus horas ocupadas, sus hojas autorizadas). Una misma capacidad puede tener de las dos. No envía WhatsApp |
 | `search_knowledge` | Sí (embebe la consulta) | No |
 | `create_knowledge_document` | Sí (se indexa al crearse) | El documento nace con la búsqueda encendida: la IA lo usa en cuanto está listo |
 | `update_knowledge_document` | Sí, si la búsqueda está encendida y el texto cambió | Reemplaza lo que sirve la IA |
@@ -82,4 +82,4 @@ Los fragmentos de abajo están entre comillas angulares porque son texto literal
 | F26 | Saldo agotado fuera de la conversación | `backend/src/services/ai-balance.service.js` | 2026-09-05 |
 | F27 | Límites y funciones del plan | `backend/src/services/entitlements.guard.js` | 2026-09-05 |
 | F28 | Qué gasta saldo en conocimiento | `backend/src/modules/mcp/tools/ai.tools.js`, `backend/src/modules/ai/knowledge/knowledge.service.js` | 2026-09-05 |
-| F1 | Capacidades integradas en modo prueba | `backend/src/modules/ai/tools/agenda-tools.js`, `backend/src/modules/ai/tools/contacto-tools.js`, `backend/src/modules/ai/tools/flow-tools.js` | 2026-09-05 |
+| F1 | Capacidades integradas en modo prueba: las escrituras exigen conversación, las lecturas no | `backend/src/modules/ai/tools/agenda-tools.js`, `backend/src/modules/ai/tools/contacto-tools.js`, `backend/src/modules/ai/tools/flow-tools.js`, `backend/src/modules/ai/tools/google-calendar-tools.js`, `backend/src/modules/ai/tools/google-sheets-tools.js` | 2026-09-06 |
