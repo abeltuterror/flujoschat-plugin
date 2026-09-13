@@ -73,7 +73,9 @@ backend + `/api/v1/mcp`. El servidor publica su metadata OAuth en:
   los skills no los repiten.
 - Te enseñan **todo lo que un agente puede hacer** antes de diseñar: responder con tu propia
   información, consultar tus sistemas, agendar citas reales, responder con botones, guardar datos
-  en la ficha del cliente, arrancar tus flujos, repartir el trabajo entre especialistas.
+  en la ficha del cliente, arrancar tus flujos, consultar y modificar tus hojas de Google, leer tus
+  documentos de Drive, escribirle al cliente por correo, llamar a tu Apps Script, repartir el
+  trabajo entre especialistas.
 - **Te muestran el plan y el prompt y esperan tu acuerdo** antes de crear o modificar nada en tu
   cuenta.
 - **Nunca te piden una credencial por el chat**: el servidor las rechaza. Las claves de tus
@@ -87,9 +89,12 @@ backend + `/api/v1/mcp`. El servidor publica su metadata OAuth en:
 
 | Qué | Dónde |
 |---|---|
-| Credenciales de una herramienta HTTP o MCP | `/dashboard/ai/tools` → ficha de la herramienta |
-| Activar una capacidad integrada (agenda, botones, ficha del cliente, flujos) | `/dashboard/ai/tools` → capacidad del sistema |
+| Credenciales de una herramienta HTTP o MCP, y la clave compartida de una herramienta Apps Script | `/dashboard/ai/tools` → ficha de la herramienta |
+| Activar una capacidad integrada (agenda, botones, ficha del cliente, flujos y las de Google: Calendar, Gmail, Sheets y Drive) | `/dashboard/ai/tools` → capacidad del sistema |
+| Conectar tu cuenta de Google y elegir las hojas, documentos y carpetas que usa el agente | Configuración → Integraciones → Google |
+| Permitir que la IA escriba al cliente por correo | Configuración → Personalizar panel |
 | Subir archivos a la base de conocimiento | `/dashboard/ai/knowledge` |
+| Importar documentos de Google Drive a la base de conocimiento | `/dashboard/ai/knowledge` → Importar de Drive |
 | Clave o proveedor propio de IA | `/dashboard/ai/config` |
 | Demostración pública de un equipo | `/dashboard/ai/teams` → Compartir demo |
 | Aviso por WhatsApp a tu equipo cuando la IA deriva | Configuración → Personalizar panel → Avisos al equipo |

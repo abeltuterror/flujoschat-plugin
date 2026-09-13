@@ -1,5 +1,45 @@
 # Changelog
 
+## 1.3.0 — 2026-09-13
+
+Cuatro capacidades de Google más y un tipo de herramienta nuevo, que el servidor ya expone y
+aquí no se enseñaban.
+
+- **Nuevo** en `references/catalogo-capacidades.md`:
+  - `google_sheets_consultar`: ver las hojas elegidas, listar sus pestañas, buscar filas y leer
+    un tramo. Con el aviso de privacidad: lee cualquier fila que coincida, sea de quien sea.
+  - `google_sheets_actualizar`: modificar celdas de una fila existente. Explica la convención de
+    columnas "(editable)", que va siempre junto con consultar, que no hay autorización por
+    cliente y que la columna que identifica al cliente no se marca.
+  - `google_gmail_escribir_cliente`: correo al cliente, solo a una dirección guardada desde el
+    panel o por la API. Cubre también el interruptor del panel, la copia oculta al equipo, los
+    topes y el riesgo de exfiltración si el agente lee datos de otros clientes.
+  - `google_drive_buscar`: listar lo elegido y leer por páginas de 4000 caracteres. Solo lo
+    elegido y sus hijos directos, y de una hoja solo la primera pestaña.
+  - El tipo de herramienta `APPS_SCRIPT` (`execUrl`, `action`, `params`), con la clave
+    compartida que solo se pone desde el panel.
+- **Nuevo**: la importación de documentos de Google Drive a la base de conocimiento, que es una
+  función del PANEL y no una capacidad del agente. Aparece en el catálogo, en la tabla de gastos
+  y en las tablas de «solo desde el panel».
+- **Nuevo** en `references/errores-y-costes.md`: los errores de Apps Script al crear o editar la
+  herramienta, y una sección con lo que las herramientas de Google y Apps Script le devuelven al
+  agente. Además, `run_team` ya dice que ejecuta de verdad las herramientas Apps Script y las
+  lecturas de hojas y de Drive.
+- **Nuevo** en `references/cuestionario-descubrimiento.md` y en `references/sintomas-y-arreglos.md`:
+  preguntas y síntomas de las cuatro capacidades y de Apps Script.
+- **Corregido**: el catálogo decía que de una hoja entregada el agente solo lee el nombre y la
+  primera fila. Con `google_sheets_consultar` lee cualquier fila de cualquier pestaña.
+- **Corregido**: no se decía que el envío de Gmail —avisar al equipo y escribir al cliente—
+  depende de que Google apruebe ese permiso para FlujosChat.
+- **Corregido**: los recuentos. Hay doce capacidades integradas, ocho de ellas de Google.
+- `crear-agente`, `actualizar-agente` y el subagente `auditor-agente-ia` conocen las dos reglas
+  de combinación: actualizar exige consultar, y el correo al cliente no se combina con lecturas
+  de datos de otros clientes.
+- `marketplace.json` se había quedado en 1.1.0; se alinea con el manifiesto.
+
+Verificado contra el servidor de FlujosChat (repo `chatboxabel`, rama con `google_drive_buscar`)
+con `npm run check:plugin`.
+
 ## 1.2.0 — 2026-09-06
 
 Las cuatro capacidades de Google Workspace, que el servidor ya expone y aquí no se enseñaban:

@@ -99,4 +99,9 @@ afectados.
 - "Conéctale la agenda" → `list_ai_tools`: ¿existe la capacidad de agenda? Sí: `toolIds` final
   con ella + política de agenda en el prompt → puerta. No: el panel primero (activarla y
   configurar la agenda), después volver aquí.
+- "Que pueda cambiar el estado del pedido en la hoja" → `list_ai_tools`: hacen falta
+  `google_sheets_consultar` y `google_sheets_actualizar`; `toolIds` final con las dos (si falta
+  alguna, panel primero). El dueño marca la columna del estado en la hoja con "(editable)" al final
+  del título, nunca la que identifica al cliente → política en el prompt (confirmar antes de
+  cambiar) → puerta.
 - "Ponlo en pausa" → `isActive` en falso → impacto en sus equipos → puerta → `validate_team`.
