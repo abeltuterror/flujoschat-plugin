@@ -25,6 +25,11 @@ del equipo. Antes de proponer nada, lee el estado actual con `get_agent`, `get_t
 | "Se quedó mudo / no responde" | Saldo agotado, plan sin IA, equipo o agente inactivos, suscripción inactiva | `get_ai_balance`; `validate_team`; `update_agent`/`update_team` con `isActive` | Volver a probar |
 | "Ofrece botones raros / repite las opciones en texto" | Capacidad de botones atada sin política, o política sin la capacidad | Atar la capacidad (`toolIds`) y añadir la política, o quitar ambas | `interactiveReply` en `run_team` |
 | "Guarda datos que no son" | La capacidad de ficha escribe lo que el modelo entiende; sin instrucción de no inventar | "Guarda solo lo que el cliente dijo textualmente; no inventes valores" | Ficha del contacto tras una conversación real |
+| "Dice que no puede mandarle el correo al cliente" | Interruptor de escribir al cliente apagado; sin correos del equipo para la copia oculta; campo de correo vacío o anotado por el propio agente; permiso de envío de Gmail todavía sin aprobar por Google; o estás en una prueba | Panel (Personalizar panel; el correo del cliente guardado por un asesor). El texto que devolvió la herramienta dice cuál: ver `errores-y-costes.md`, § 2 bis | Conversación real, no la prueba |
+| "No cambia la hoja" o "dice que esa columna no se puede modificar" | Falta google_sheets_consultar en el mismo agente; la columna no termina su título en "(editable)"; hay filas idénticas; o estás en una prueba | Atar las dos capacidades de Sheets; marcar la columna en la hoja; limpiar duplicados | Conversación real |
+| "No encuentra un documento de Drive" | No está elegido; está en una subcarpeta de la carpeta elegida; es un acceso directo; o lo que busca está en otra pestaña de una hoja (de una hoja solo se lee la primera) | Elegir el documento o la carpeta que lo contiene directamente; para pestañas, google_sheets_consultar | `toolCalls` en `run_team` (las lecturas de Drive sí corren en la prueba, contra la cuenta real) |
+| "Le contó a un cliente datos de otro" | Se le entregó una hoja o un documento con datos de varios clientes: google_sheets_consultar lee cualquier fila que coincida y google_drive_buscar lee el documento entero | Quitar esa hoja o documento de la lista, o preparar una versión con solo lo que un cliente puede ver. Una regla en el prompt ayuda, pero la barrera real es qué se le entrega | Revisar qué hojas y documentos están elegidos |
+| "La herramienta de Apps Script falla" | Sin clave compartida (creada por este canal); implementación sin acceso para cualquiera; URL `/exec` equivocada; o el script no responde con su formato | Clave en el panel; volver a implementar el script; revisar `execUrl` | `test_ai_tool` (se ejecuta de verdad) y el texto que devuelve |
 
 ## Reglas para diagnosticar
 
@@ -48,3 +53,7 @@ del equipo. Antes de proponer nada, lee el estado actual con `get_agent`, `get_t
 | F16 | Variables y `(sin dato)`; el editor avisa de marcadores desconocidos | `docs/referencia/variables-de-prompt.md` | 2026-09-05 |
 | F20 | Qué devuelve `run_team` | `backend/src/modules/ai/runtime/playground.service.js` | 2026-09-05 |
 | F22 | Avisos de `validate_team` | `backend/src/modules/ai/agents/team.service.js` | 2026-09-05 |
+| F25 | Herramienta Apps Script: clave, acceso de la implementación y respuestas | `backend/src/modules/ai/tools/apps-script-tool.js` | 2026-09-13 |
+| F26 | Gmail al cliente: por qué no envía | `backend/src/modules/ai/tools/google-gmail-cliente-tools.js`, `backend/src/modules/integrations/google/google-scopes.js` | 2026-09-13 |
+| F27 | Sheets consultar y modificar: columnas "(editable)", duplicados, privacidad | `backend/src/modules/ai/tools/google-sheets-consulta-tools.js`, `backend/src/modules/ai/tools/google-sheets-actualizar-tools.js` | 2026-09-13 |
+| F29 | Drive leer: hijos directos, accesos directos, primera pestaña | `backend/src/modules/ai/tools/google-drive-tools.js` | 2026-09-13 |

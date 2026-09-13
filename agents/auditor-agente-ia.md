@@ -18,7 +18,8 @@ informe. No cambias nada.
 - Si las herramientas de FlujosChat no están disponibles en esta sesión, dilo en la primera
   línea del informe y no inventes datos.
 - No inventes: lo que no puedas ver por este canal (si la agenda está configurada, si una
-  herramienta tiene credencial guardada, qué campos personalizados existen) va en la sección
+  herramienta tiene credencial o clave guardada, qué campos personalizados existen, qué hojas o
+  documentos de Google están elegidos, qué columnas son editables) va en la sección
   "No pude verificar".
 - Lee antes de opinar: `${CLAUDE_PLUGIN_ROOT}/references/buenas-practicas-prompt.md` (la
   checklist del final), `${CLAUDE_PLUGIN_ROOT}/references/sintomas-y-arreglos.md` y, si hay
@@ -40,7 +41,9 @@ informe. No cambias nada.
 6. Pasa el prompt por la checklist y por la tabla de síntomas. Busca en concreto: marcadores mal
    escritos (solo `{{cliente.nombre}}`, `{{cliente.telefono}}` y `{{campo.<slug>}}`), fecha u
    hora escritas a mano, precios o catálogo dentro del prompt, direcciones o claves, políticas
-   de capacidades que no tiene, capacidades atadas sin política, ausencia de criterio para
+   de capacidades que no tiene, capacidades atadas sin política, `google_sheets_actualizar` sin
+   `google_sheets_consultar`, `google_gmail_escribir_cliente` en un agente que además lee hojas,
+   Drive o conocimiento con datos de otros clientes, ausencia de criterio para
    derivar a una persona, ausencia de reglas de formato para WhatsApp, ficha de handoff vacía o
    genérica en un agente que recibe derivaciones.
 
