@@ -16,7 +16,9 @@ Requiere el servidor MCP de FlujosChat conectado.
 2. **Elige la acción:**
    - **Metadatos** (nombre, descripción, trigger, triggerKeywords, prioridad, activar/desactivar):
      usa **`update_flow`** con `flowId` y solo los campos a cambiar.
-   - **Duplicar:** **`duplicate_flow`** (`flowId`, `newName`). El clon queda inactivo.
+   - **Duplicar:** **`duplicate_flow`** (`flowId`, `newName`). El clon queda inactivo. No lo
+     uses como copia de seguridad: conserva las ramas de las condiciones apuntando a los pasos
+     del flujo ORIGINAL (para guardar una copia, `get_flow`).
    - **Eliminar:** **`delete_flow`** (`flowId`). Irreversible — confirma con el usuario.
    - **Imagen de un paso:** **`set_flow_step_image`** (`flowId`, `stepOrder` o `stepId`, `imageUrl`
      o `null` para quitarla) pone o quita la portada de un paso con botones o la imagen de un
@@ -34,7 +36,9 @@ Requiere el servidor MCP de FlujosChat conectado.
      sin continuación.
    - **Quitar un paso:** reconecta PRIMERO lo que apuntaba a él con su siguiente y después
      **`delete_flow_step`** (`stepId`). No re-enlaza nada: las transiciones que llegaban a él se
-     borran y las ramas de las condiciones que lo apuntaban quedan vacías.
+     borran, pero las ramas de las condiciones que lo apuntaban se quedan apuntando a un paso que
+     ya no existe (la sesión se corta ahí, y el servidor no deja volver a guardar esa condición
+     sin repuntarlas). Por eso se repuntan ANTES de borrar.
    - **Cambiar a dónde lleva una respuesta:** **`add_flow_transition`** (`fromStepId`,
      `toStepId`, `condition`, `matchValue`), **`update_flow_transition`** o
      **`delete_flow_transition`** (`transitionId`). Los dos pasos tienen que ser del mismo flujo.
