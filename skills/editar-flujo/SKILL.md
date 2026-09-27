@@ -37,8 +37,8 @@ Requiere el servidor MCP de FlujosChat conectado.
    - **Quitar un paso:** reconecta PRIMERO lo que apuntaba a él con su siguiente y después
      **`delete_flow_step`** (`stepId`). No re-enlaza nada: las transiciones que llegaban a él se
      borran, pero las ramas de las condiciones que lo apuntaban se quedan apuntando a un paso que
-     ya no existe (la sesión se corta ahí, y el servidor no deja volver a guardar esa condición
-     sin repuntarlas). Por eso se repuntan ANTES de borrar.
+     ya no existe (la sesión se corta ahí, y el servidor rechaza volver a mandar el config de esa
+     condición sin repuntarlas). Por eso se repuntan ANTES de borrar.
    - **Cambiar a dónde lleva una respuesta:** **`add_flow_transition`** (`fromStepId`,
      `toStepId`, `condition`, `matchValue`), **`update_flow_transition`** o
      **`delete_flow_transition`** (`transitionId`). Los dos pasos tienen que ser del mismo flujo.
