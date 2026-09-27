@@ -27,10 +27,14 @@ Requiere el servidor MCP de FlujosChat conectado.
      a cambiar). OJO: su `config` **reemplaza** el entero — lee el paso con `get_flow` y manda el
      config COMPLETO con tu cambio, o se pierden las demás claves.
    - **Añadir un paso:** **`add_flow_step`** (`flowId`, `stepType`, `name`, `config`; sin
-     `stepOrder` va al final). Nace suelto: enlázalo después apuntando el paso anterior a él
-     (`update_flow_step` con `nextStepId`, o una transición) y el nuevo al siguiente.
-   - **Quitar un paso:** **`delete_flow_step`** (`stepId`). No re-enlaza nada: las transiciones
-     que llegaban a él se borran, así que reconecta lo que apuntaba a él.
+     `stepOrder` va al final). En ESTE orden: créalo ya enlazado a lo que va después
+     (`nextStepId` al crearlo, o una transición desde él) y SOLO al final apunta el paso anterior
+     a él (`update_flow_step` con `nextStepId`, o una transición). Al revés, en un flujo activo
+     hay un rato —o para siempre, si falla la última llamada— en que los clientes llegan a un paso
+     sin continuación.
+   - **Quitar un paso:** reconecta PRIMERO lo que apuntaba a él con su siguiente y después
+     **`delete_flow_step`** (`stepId`). No re-enlaza nada: las transiciones que llegaban a él se
+     borran y las ramas de las condiciones que lo apuntaban quedan vacías.
    - **Cambiar a dónde lleva una respuesta:** **`add_flow_transition`** (`fromStepId`,
      `toStepId`, `condition`, `matchValue`), **`update_flow_transition`** o
      **`delete_flow_transition`** (`transitionId`). Los dos pasos tienen que ser del mismo flujo.
