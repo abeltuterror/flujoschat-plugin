@@ -1,6 +1,6 @@
 ---
 name: editar-flujo
-description: Inspeccionar y editar flujos de WhatsApp existentes en FlujosChat — cambiar nombre, trigger, prioridad o estado, duplicar, eliminar, o reconstruir la lógica de pasos. Úsalo cuando el usuario quiera modificar, revisar, clonar o borrar un flujo existente en FlujosChat.
+description: Inspeccionar y editar flujos de WhatsApp existentes en FlujosChat — cambiar nombre, trigger, prioridad o estado, editar, añadir o quitar pasos y transiciones uno a uno, duplicar o eliminar. Úsalo cuando el usuario quiera modificar, revisar, clonar o borrar un flujo existente en FlujosChat.
 allowed-tools: "Read Write Bash(node *)"
 ---
 
@@ -23,10 +23,23 @@ Requiere el servidor MCP de FlujosChat conectado.
      paso IMAGE sin recrear el flujo. La URL sale de **`upload_flow_image`** (base64 o una
      `sourceUrl` pública); **`list_flow_images`** enseña las ya subidas para reutilizarlas. Solo un
      paso BUTTONS admite portada: en una lista se guardaría y nunca se enviaría.
-   - **Reestructurar pasos/transiciones:** las tools MCP no editan pasos uno a uno. Parte del
-     `{ flow, steps }` que devuelve `get_flow`, corrígelo (ver la skill `crear-flujo` y su
-     validador) y crea un flujo nuevo con **`create_flow`**; o indica al usuario que ajuste los
-     pasos en el editor visual del panel. `update_flow` no añade ni cambia pasos.
+   - **Cambiar un paso** (texto, botones, opciones): **`update_flow_step`** (`stepId` y los campos
+     a cambiar). OJO: su `config` **reemplaza** el entero — lee el paso con `get_flow` y manda el
+     config COMPLETO con tu cambio, o se pierden las demás claves.
+   - **Añadir un paso:** **`add_flow_step`** (`flowId`, `stepType`, `name`, `config`; sin
+     `stepOrder` va al final). Nace suelto: enlázalo después apuntando el paso anterior a él
+     (`update_flow_step` con `nextStepId`, o una transición) y el nuevo al siguiente.
+   - **Quitar un paso:** **`delete_flow_step`** (`stepId`). No re-enlaza nada: las transiciones
+     que llegaban a él se borran, así que reconecta lo que apuntaba a él.
+   - **Cambiar a dónde lleva una respuesta:** **`add_flow_transition`** (`fromStepId`,
+     `toStepId`, `condition`, `matchValue`), **`update_flow_transition`** o
+     **`delete_flow_transition`** (`transitionId`). Los dos pasos tienen que ser del mismo flujo.
+   - **Reescritura grande:** sigue valiendo partir del `{ flow, steps }` de `get_flow`, corregirlo
+     (skill `crear-flujo` y su validador) y crear un flujo nuevo con **`create_flow`** desactivado.
+   - `update_flow` no añade ni cambia pasos: solo metadatos.
+   - Tras editar pasos, **relee con `get_flow`** y recorre el flujo: ningún paso suelto ni
+     respuesta que no lleve a ningún sitio. Si el flujo está activo, el cambio llega a los
+     clientes en cuanto se guarda.
 
 3. **Confirma** los cambios mostrando el resultado de la tool (y los `warnings` si aplica).
 
