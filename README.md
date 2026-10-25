@@ -1,6 +1,6 @@
 # Plugin de FlujosChat para Claude Code
 
-Crea y edita **flujos de WhatsApp** y **agentes de IA** de [FlujosChat](https://www.flujoschat.foo)
+Crea y edita **flujos de WhatsApp** y **agentes de IA** de [FlujosChat](https://www.flujoschat.com)
 directamente desde Claude, vía un servidor **MCP remoto** protegido con **OAuth 2.1**.
 
 ## Qué incluye
@@ -29,7 +29,7 @@ directamente desde Claude, vía un servidor **MCP remoto** protegido con **OAuth
 
 ```bash
 # 1. Añade el marketplace (usa SIEMPRE la URL HTTPS, no el atajo owner/repo)
-/plugin marketplace add https://github.com/abeltuterror/flujoschat-plugin
+/plugin marketplace add https://github.com/nexainnovate/flujoschat-plugin
 
 # 2. Instala el plugin
 /plugin install flujoschat@flujoschat-marketplace
@@ -52,7 +52,7 @@ Conexiones MCP**, donde puedes revocarla cuando quieras.
 
 ## Configuración del endpoint
 
-`.mcp.json` apunta por defecto a `https://api.flujoschat.foo/api/v1/mcp`. Si usas otra instancia
+`.mcp.json` apunta por defecto a `https://api.flujoschat.com/api/v1/mcp`. Si usas otra instancia
 (self-hosted o dominio propio), edita la `url` para que coincida con el `OAUTH_ISSUER_URL` de tu
 backend + `/api/v1/mcp`. El servidor publica su metadata OAuth en:
 
@@ -109,9 +109,9 @@ reales.
 
 ## Documentación
 
-- Manual: <https://www.flujoschat.foo/ayuda> — en particular
-  [Agentes, equipos y herramientas](https://www.flujoschat.foo/ayuda/ia-agentes-y-equipos),
-  [La base de conocimiento](https://www.flujoschat.foo/ayuda/ia-conocimiento),
-  [Poner a trabajar a la IA](https://www.flujoschat.foo/ayuda/ia-configuracion) y
-  [Conectar Claude por MCP](https://www.flujoschat.foo/ayuda/conectar-claude-mcp).
+- Manual: <https://www.flujoschat.com/ayuda> — en particular
+  [Agentes, equipos y herramientas](https://www.flujoschat.com/ayuda/ia-agentes-y-equipos),
+  [La base de conocimiento](https://www.flujoschat.com/ayuda/ia-conocimiento),
+  [Poner a trabajar a la IA](https://www.flujoschat.com/ayuda/ia-configuracion) y
+  [Conectar Claude por MCP](https://www.flujoschat.com/ayuda/conectar-claude-mcp).
 - Formato JSON de flujos: `get_flow_schema` o `skills/crear-flujo/references/contrato-json.md`.

@@ -2,7 +2,7 @@
   "mcpServers": {
     "flujoschat": {
       "type": "http",
-      "url": "https://api.flujoschat.foo/api/v1/mcp"
+      "url": "https://api.flujoschat.com/api/v1/mcp"
     }
   }
 }
