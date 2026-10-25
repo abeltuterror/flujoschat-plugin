@@ -236,8 +236,9 @@ texto nuevo. Para un agente que atiende de verdad, el camino recomendado es: [F1
    `restoreVersion` para volver a la anterior (añade una versión; no borra nada).
 
 Pasa SIEMPRE `expectedDraftUpdatedAt` (la fecha del borrador que leíste con
-`list_agent_prompt_versions`, o `null` si no había) al guardar y al publicar: sin ella no se
-comprueba nada y pisarías el borrador de otra persona. Si responde que el borrador cambió, otra
+`list_agent_prompt_versions`, o `null` si no había). Al guardar, sin ella no se comprueba nada y
+pisarías el borrador de otra persona; al PUBLICAR es obligatoria y sin ella falla: es lo que ata la
+publicación al texto que el dueño revisó. Si responde que el borrador cambió, otra
 persona lo editó entretanto: vuelve a leerlo y repite.
 
 Si alguien PUBLICÓ otra versión después de empezar el borrador (también con `update_agent`), el
@@ -279,6 +280,6 @@ borrador queda desfasado y publicarlo FALLA, porque desharía ese cambio. Compar
 | F13 | Búsqueda automática si hay categorías | `backend/src/modules/ai/runtime/agent-builder.js` | 2026-09-05 |
 | F14 | El prompt no es un cortafuegos; bloque propio en la demo | `backend/src/modules/ai/runtime/agent-builder.js` | 2026-09-05 |
 | F16 | Variables, `(sin dato)`, saneado, no fiarse del valor | `docs/referencia/variables-de-prompt.md`, `backend/src/modules/ai/runtime/prompt-variables.js` | 2026-09-05 |
-| F17 | Condiciones `{{#if}}`…`{{else}}`…`{{/if}}`: sintaxis, comparación, fallo con la línea, falsas sin conversación | `docs/referencia/variables-de-prompt.md`, `backend/src/modules/ai/runtime/prompt-variables.js` | 2026-10-26 |
+| F17 | Condiciones `{{#if}}`…`{{else}}`…`{{/if}}`: sintaxis, comparación, fallo con la línea, sin valor el campo cuenta como vacío (`!=` verdadera) | `docs/referencia/variables-de-prompt.md`, `backend/src/modules/ai/runtime/prompt-variables.js` | 2026-10-26 |
 | F18 | Fotos del agente y su campo `cuando` | `backend/src/modules/mcp/agent-schema.js` | 2026-10-26 |
 | F19 | Borrador, diff, publicar y restaurar versiones del prompt | `docs/referencia/prompt-versiones.md`, `backend/src/modules/mcp/tools/ai.tools.js` | 2026-10-26 |

@@ -70,7 +70,8 @@ PUBLICADO, no el borrador: la prueba va después de publicar. Pregunta: "¿Guard
 
 ## 5. Guardar y comprobar
 
-1. Prompt: `publish_agent_prompt` con una `note` de qué cambia. El resto: `update_agent` con los
+1. Prompt: `publish_agent_prompt` con `expectedDraftUpdatedAt` (la fecha del borrador que enseñaste; sin
+   ella no publica) y una `note` de qué cambia. El resto: `update_agent` con los
    campos cambiados (sin `instructions`).
 2. Compara la respuesta con lo mostrado: conteo de categorías y herramientas, modelo guardado.
    Si el cambio salió mal, se vuelve atrás con `publish_agent_prompt` y `restoreVersion`.
