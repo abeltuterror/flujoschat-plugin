@@ -159,8 +159,10 @@ Ya tienes su documento: no se lo vuelvas a pedir.
   un flujo de lo que escribió: "si {{campo.vip}} es sí, haz descuento" es regalar el descuento a
   quien escriba "sí". Lo que da derechos (precios especiales, excepciones) se consulta en tu
   sistema con una herramienta.
-- **En una prueba con `run_team` toda condición es FALSA** (no hay cliente): siempre corre la rama
-  `{{else}}`. La rama del `if` solo se ve en una conversación real con ese dato en la ficha.
+- **Sin valor, el campo cuenta como vacío**: `{{#if campo.x}}` y `== "valor"` salen falsas, pero
+  **`!= "valor"` sale VERDADERA** (vacío no es "valor"). Pasa en una prueba con `run_team` (no hay
+  cliente) y con un cliente real que no tiene ese dato: escribe cada condición pensando en ese
+  caso. La rama que depende de un dato concreto solo se ve en una conversación real con ese dato.
 - Úsalas con medida: dos o tres por prompt. Si cada cliente necesita un prompt distinto, son dos
   agentes (o un dato en el conocimiento), no veinte condiciones.
 
@@ -233,9 +235,16 @@ texto nuevo. Para un agente que atiende de verdad, el camino recomendado es: [F1
 4. Si sale mal: `list_agent_prompt_versions` para ver el historial y `publish_agent_prompt` con
    `restoreVersion` para volver a la anterior (añade una versión; no borra nada).
 
-Si guardar o publicar responde que el borrador cambió, otra persona lo editó entretanto: vuelve a
-leerlo con `list_agent_prompt_versions` y repite (puedes pasar `expectedDraftUpdatedAt` para
-detectarlo). Para descartar un borrador: `save_agent_prompt_draft` con `instructions: null`.
+Pasa SIEMPRE `expectedDraftUpdatedAt` (la fecha del borrador que leíste con
+`list_agent_prompt_versions`, o `null` si no había) al guardar y al publicar: sin ella no se
+comprueba nada y pisarías el borrador de otra persona. Si responde que el borrador cambió, otra
+persona lo editó entretanto: vuelve a leerlo y repite.
+
+Si alguien PUBLICÓ otra versión después de empezar el borrador (también con `update_agent`), el
+borrador queda desfasado y publicarlo FALLA, porque desharía ese cambio. Compara con lo publicado
+(`diff_agent_prompt`), incorpora lo que falte, enséñaselo al dueño y vuelve a guardar con
+`rebase: true`; solo entonces se puede publicar. Para descartar un borrador:
+`save_agent_prompt_draft` con `instructions: null`.
 
 ## 12. Checklist antes de crear o guardar
 
