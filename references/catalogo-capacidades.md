@@ -24,6 +24,9 @@ los publica el servidor en `get_agent_schema`, y ahí siempre están al día.
      responde con su id: úsalo). Existe una sola vez por empresa y la comparten todos los agentes.
      Sus **ajustes propios** (horario de la agenda, hojas elegidas, correos de aviso, números del
      dueño) siguen en el panel: enciéndela aquí y deja esos ajustes en la lista de pendientes.
+     **Plan:** cada fila cuenta en el tope de herramientas del plan (como una HTTP), y las de
+     Google exigen además un plan que incluya Google Workspace; si no, crearla falla avisando del
+     plan. Las demás (agenda, botones, contacto, flujos, imagenes) solo necesitan el módulo de IA.
    - **HTTP**: un endpoint tuyo (`url`, `method`, `params`). Para consultar tu sistema.
    - **MCP**: un servidor MCP remoto (`serverUrl`). Con `allowedTools` eliges qué funciones de ese
      servidor ve el agente (sin la lista, todas). El filtro es de la herramienta, no del agente:
@@ -77,8 +80,8 @@ los publica el servidor en `get_agent_schema`, y ahí siempre están al día.
 
 ## Antes de ofrecer las capacidades de Google
 
-Las once se apoyan en cuentas de Google que conecta el DUEÑO en Configuración →
-Integraciones → Google, no en una credencial por agente. Lo que conviene decirle antes de que
+Las once exigen un plan con Google Workspace y se apoyan en cuentas de Google que conecta el
+DUEÑO en Configuración → Integraciones → Google, no en una credencial por agente. Lo que conviene decirle antes de que
 elija:
 
 - **Lo que es único es el vínculo empresa + servicio**, no la cuenta. Según el plan puede haber
@@ -144,8 +147,10 @@ elija:
   2. `test_ai_tool` de cada herramienta nueva: una MCP solo lista funciones (sin efecto); una HTTP
      o Apps Script se EJECUTA de verdad con la credencial guardada — si escribe, escribe. Avísalo.
   3. Un `run_team` por escenario que quieras comprobar (gasta saldo). Mira `toolCalls`: qué llamó
-     y con qué. Las capacidades que escriben responden que están en una prueba; las que leen
-     consultan de verdad. Cambia algo antes de repetir: el mismo escenario dos veces sin cambios
+     y con qué. Sin cliente real, la agenda entera (también consultar horarios), la ficha, los
+     flujos, los envíos y toda escritura responden que están en una prueba; las lecturas de
+     Google (calendarios, hojas, Drive, directorio, contactos) y tus herramientas HTTP, MCP y Apps
+     Script se ejecutan de verdad. Cambia algo antes de repetir: el mismo escenario dos veces sin cambios
      es saldo tirado.
 - **Efectos reales y coste de cada tool del MCP:** `errores-y-costes.md`, § 3.
 

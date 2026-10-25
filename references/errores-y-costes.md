@@ -41,8 +41,8 @@ Los fragmentos de abajo están entre comillas angulares porque son texto literal
 | «Hay agentes duplicados en el equipo» · «Algún agente no existe o no pertenece a tu empresa» · «El agente de entrada debe ser miembro del equipo» · «Un agente no puede hacer handoff a sí mismo» · «Los handoffs deben conectar agentes del equipo» | Grafo mal armado | Corregir y reenviar el grafo COMPLETO (ver `diseno-de-equipos.md`) |
 | «El último mensaje debe ser del usuario» | `run_team` con la conversación terminando en un mensaje del asistente | Terminar `messages` con un mensaje del usuario |
 | «Saldo de IA agotado» | Sin saldo de IA incluida | `get_ai_balance` para confirmarlo; no insistir. El dueño recarga o configura clave propia en el panel |
-| «Tu plan no incluye el módulo de IA» / «Esta función no está incluida en tu plan» | El plan no tiene IA (o esa función) | Avisar; es cosa del plan |
-| «Has alcanzado el límite de tu plan» | Tope de agentes, equipos o herramientas del plan | Avisar; proponer reutilizar o desactivar antes de crear |
+| «Tu plan no incluye el módulo de IA» / «Esta función no está incluida en tu plan» | El plan no tiene IA (o esa función). Al encender una capacidad de Google: el plan no incluye Google Workspace | Avisar; es cosa del plan |
+| «Has alcanzado el límite de tu plan» | Tope de agentes, equipos o herramientas del plan (cada capacidad integrada encendida cuenta como una herramienta) | Avisar; proponer reutilizar o desactivar antes de crear |
 | «La IA incluida no está disponible en este momento» | La plataforma no tiene la IA incluida operativa | Reintentar más tarde; si persiste, avisar |
 | «estás en una prueba» (dentro de una respuesta de `run_team`) | Una capacidad integrada se negó a actuar porque no hay conversación real | No es un error: es lo esperado en la prueba. Se comprueba en una conversación real |
 | Documento con estado `FAILED` y un mensaje de error | La ingesta del documento falló | Leer el motivo, corregir el texto y solo entonces `reprocess_knowledge_document` (gasta saldo) |

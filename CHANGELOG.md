@@ -30,7 +30,11 @@ condiciones del prompt, el borrador/versiones y las capacidades integradas por M
   (`list_agent_images`, `upload_agent_image`). El auditor lee además versiones, diff, campos y fotos.
 - **Corregido**: `editar-flujo` decía que los pasos no se editan uno a uno; ahora enseña
   `add_flow_step`, `update_flow_step` (el `config` se reemplaza entero), `delete_flow_step` y las
-  tres de transiciones.
+  tres de transiciones; `crear-equipo` ya no manda al panel para añadir el paso `AI_HANDOFF` a
+  un flujo existente.
+- **Nuevo**: qué exige cada capacidad del plan (las de Google, un plan con Google Workspace; todas
+  cuentan en el tope de herramientas) y qué hace cada una en una prueba con `run_team` (la agenda
+  entera responde que está en una prueba).
 - **Corregido**: el catálogo decía que Gmail no envía hasta que Google apruebe la app. Lo que
   cuenta es si la conexión tiene el servicio y el permiso; si sale pendiente, no funciona.
 
