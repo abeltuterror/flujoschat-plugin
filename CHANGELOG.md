@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.3.1 — 2026-10-25
+
+- **Cambiado**: el repositorio pasa a la organización `nexainnovate`
+  (`/plugin marketplace add https://github.com/nexainnovate/flujoschat-plugin`). La URL vieja
+  sigue funcionando por la redirección de GitHub; el nombre del marketplace y el comando de
+  instalación no cambian.
+- **Cambiado**: el servidor MCP y los enlaces usan el dominio `flujoschat.com` en lugar de
+  `flujoschat.foo`. Quien ya tenía el plugin conectado tendrá que iniciar sesión una vez más.
+
 ## 1.3.0 — 2026-09-13
 
 Cuatro capacidades de Google más y un tipo de herramienta nuevo, que el servidor ya expone y
