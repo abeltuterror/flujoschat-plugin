@@ -1,5 +1,48 @@
 # Changelog
 
+## 1.4.0 — 2026-10-26
+
+Cómo escribir un buen prompt, qué conectores hay y cómo usarlos. Requiere el servidor con las
+condiciones del prompt, el borrador/versiones y las capacidades integradas por MCP: ver
+«Depende del servidor» abajo.
+
+- **Nuevo** en `references/buenas-practicas-prompt.md`:
+  - § 6 bis, condiciones `{{#if campo.x}}` / `== "valor"` / `!= "valor"` / `{{else}}` /
+    `{{/if}}`, con ejemplo, sus reglas (comillas dobles, hasta 5 niveles, falla con la línea) y
+    los dos avisos que importan: sirven para tono y contexto, nunca para conceder algo, y en
+    `run_team` toda condición es falsa.
+  - § 11 bis, cambiar un prompt que ya atiende: borrador → diff → publicar con nota, y volver
+    atrás restaurando una versión.
+  - Qué tiene el agente solo (derivar, buscar en el conocimiento) y qué hay que atar; políticas
+    de prompt para fotos y para cada capacidad de Google; checklist ampliada.
+- **Nuevo** en `references/catalogo-capacidades.md`:
+  - "Las tres piezas" para conectar cualquier cosa: la herramienta existe, está atada y el prompt
+    dice la política. Los cuatro tipos (BUILTIN, HTTP, MCP, Apps Script).
+  - Las capacidades que faltaban: `imagenes`, `google_calendar_dueno`, `google_directorio` y
+    `google_contactos`, y el paso de teléfono de la agenda (`telefono_para_cita`).
+  - "Usarlas bien": el mínimo necesario, cómo describir lo que creas, combinaciones obligadas y
+    prohibidas, y el orden de prueba de lo barato a lo caro.
+- **Cambiado**: las capacidades integradas se encienden por MCP con `create_ai_tool` tipo
+  `BUILTIN`; se atan o sueltan con `addToolIds` / `removeToolIds`; una herramienta MCP puede
+  limitar las funciones que ve el agente con `allowedTools`. Sus ajustes propios siguen en el panel.
+- **Cambiado**: `actualizar-agente` cambia el prompt por borrador y enseña el diff en la puerta;
+  `crear-agente` usa `list_custom_fields` / `create_custom_field` y las fotos del agente
+  (`list_agent_images`, `upload_agent_image`). El auditor lee además versiones, diff, campos y fotos.
+- **Corregido**: `editar-flujo` decía que los pasos no se editan uno a uno; ahora enseña
+  `add_flow_step`, `update_flow_step` (el `config` se reemplaza entero), `delete_flow_step` y las
+  tres de transiciones; `crear-equipo` ya no manda al panel para añadir el paso `AI_HANDOFF` a
+  un flujo existente.
+- **Nuevo**: qué exige cada capacidad del plan (las de Google, un plan con Google Workspace; todas
+  cuentan en el tope de herramientas) y qué hace cada una en una prueba con `run_team` (la agenda
+  entera responde que está en una prueba).
+- **Corregido**: el catálogo decía que Gmail no envía hasta que Google apruebe la app. Lo que
+  cuenta es si la conexión tiene el servicio y el permiso; si sale pendiente, no funciona.
+
+Depende del servidor: condiciones y borrador/versiones (rama
+`feat/agentes-herramientas-prompt-versiones`); capacidades por MCP, `allowedTools` y
+`addToolIds`/`removeToolIds` (rama `feat/agentes-tools-wip`). Lo de flujos, fotos y campos ya
+estaba en producción.
+
 ## 1.3.1 — 2026-10-25
 
 - **Cambiado**: el repositorio pasa a la organización `nexainnovate`

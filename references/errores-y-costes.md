@@ -31,16 +31,27 @@ Los fragmentos de abajo están entre comillas angulares porque son texto literal
 | «La acción debe ser un nombre de función» | `action` con espacios, guiones o empezando por un número | Letras, números y guion bajo, igual que la acción que despacha su script |
 | «La configuración de un Apps Script solo admite» | Metiste en `config` algo que no es `execUrl`, `action` o `params` (por ejemplo, la clave) | Quitarlo. La clave compartida la pone el dueño en el panel, nunca aquí |
 | «Esta herramienta guarda una clave compartida y la estás apuntando a otra implementación de Apps Script» | Intentaste cambiar `execUrl` de una herramienta Apps Script que ya tiene clave | Ese cambio se hace en el panel |
-| «Capacidad integrada desconocida» / «Una capacidad integrada no se configura» / «El nombre de una capacidad integrada lo fija el sistema» | Intentaste crear o reconfigurar una capacidad integrada | No se crean ni se configuran por este canal: se activan en el panel y se atan con `toolIds` |
+| «Capacidad integrada desconocida» | La clave de `config.builtin` no está en el catálogo | Usa una de las claves que lista el propio mensaje (o `get_agent_schema`) |
+| "La capacidad … ya está activada (id …)" | Esa capacidad ya existe en la empresa (hay una por empresa) | No la crees otra vez: usa ese id y átala al agente con `addToolIds` |
+| «Una capacidad integrada no se configura» / «El nombre de una capacidad integrada lo fija el sistema» | Intentaste cambiar el `config` o el nombre de una fila `BUILTIN` | De una capacidad integrada solo se cambian `description` e `isActive`. Sus ajustes propios (horario, hojas, correos) van en el panel |
+| "Usa toolIds … o addToolIds/removeToolIds …, no los dos a la vez" / "Un mismo tool no puede ir en addToolIds y removeToolIds" | Mezclaste el reemplazo de la lista con las altas y bajas | O la lista final entera en `toolIds`, o solo altas y bajas |
+| Un error sobre `config.allowedTools` | La lista de funciones permitidas de una herramienta MCP no es válida: no es una lista, tiene repetidos o nombres demasiado largos | Corrígela con los nombres exactos que lista `test_ai_tool` |
+| «Plantilla del prompt inválida» (con la línea) | Una condición `{{#if}}` mal escrita: sin cerrar, con comillas simples, sin `campo.`/`cliente.` o un `{{else}}` suelto | Corrige esa línea (ver `buenas-practicas-prompt.md`, § 6 bis). Crear, actualizar y publicar fallan; guardar el borrador no |
+| «El borrador cambió» | Otra persona o agente editó el borrador mientras lo guardabas o publicabas | `list_agent_prompt_versions`, vuelve a leerlo, enseña al dueño lo nuevo y repite |
+| «Revisaste la versión» (la publicada ahora es otra) | Se publicó otra versión entre que leíste y guardaste | `diff_agent_prompt` entre tu versión y la publicada, incorpora lo que falte y vuelve a guardar con la versión nueva |
+| «Para empezar o rebasar un borrador indica la versión publicada» | Faltó `basedOnVersion` al empezar el borrador o con `rebase` | Léela con `list_agent_prompt_versions` (`published.version`) y repite |
+| «Para publicar indica la revisión del borrador» | Se llamó a `publish_agent_prompt` sin `expectedDraftUpdatedAt` | Lee la fecha con `list_agent_prompt_versions` (la del borrador que enseñaste) y repite con ella |
+| «El borrador partió de la versión» (y después se publicó otra) | Alguien publicó otra versión después de empezar el borrador | `diff_agent_prompt` contra lo publicado, incorpora lo que falte, enséñalo y guarda con `rebase: true`; entonces publica |
 | «Hay agentes duplicados en el equipo» · «Algún agente no existe o no pertenece a tu empresa» · «El agente de entrada debe ser miembro del equipo» · «Un agente no puede hacer handoff a sí mismo» · «Los handoffs deben conectar agentes del equipo» | Grafo mal armado | Corregir y reenviar el grafo COMPLETO (ver `diseno-de-equipos.md`) |
 | «El último mensaje debe ser del usuario» | `run_team` con la conversación terminando en un mensaje del asistente | Terminar `messages` con un mensaje del usuario |
 | «Saldo de IA agotado» | Sin saldo de IA incluida | `get_ai_balance` para confirmarlo; no insistir. El dueño recarga o configura clave propia en el panel |
-| «Tu plan no incluye el módulo de IA» / «Esta función no está incluida en tu plan» | El plan no tiene IA (o esa función) | Avisar; es cosa del plan |
-| «Has alcanzado el límite de tu plan» | Tope de agentes, equipos o herramientas del plan | Avisar; proponer reutilizar o desactivar antes de crear |
+| «Tu plan no incluye el módulo de IA» / «Esta función no está incluida en tu plan» | El plan no tiene IA (o esa función). Al encender una capacidad de Google: el plan no incluye Google Workspace | Avisar; es cosa del plan |
+| «Has alcanzado el límite de tu plan» | Tope de agentes, equipos o herramientas del plan (cada capacidad integrada encendida cuenta como una herramienta) | Avisar; proponer reutilizar o desactivar antes de crear |
 | «La IA incluida no está disponible en este momento» | La plataforma no tiene la IA incluida operativa | Reintentar más tarde; si persiste, avisar |
 | «estás en una prueba» (dentro de una respuesta de `run_team`) | Una capacidad integrada se negó a actuar porque no hay conversación real | No es un error: es lo esperado en la prueba. Se comprueba en una conversación real |
 | Documento con estado `FAILED` y un mensaje de error | La ingesta del documento falló | Leer el motivo, corregir el texto y solo entonces `reprocess_knowledge_document` (gasta saldo) |
 | `test_ai_tool` de una herramienta MCP devuelve que no conectó | Dirección incorrecta o servidor caído | Revisar `serverUrl`; el agente corre sin esa herramienta hasta que conecte |
+| `test_ai_tool` de una herramienta MCP trae nombres en `notFound` | Esas funciones de `allowedTools` ya no existen en el servidor | Quítalas o corrige el nombre con `update_ai_tool`; el agente simplemente no las recibe |
 
 ## 2 bis. Lo que devuelven las herramientas del agente (Google y Apps Script)
 
@@ -74,9 +85,11 @@ que no puede.
 | `set_knowledge_document_rag` al encender | Sí, si el índice estaba desactualizado | La IA empieza o deja de usar el documento |
 | `reprocess_knowledge_document` | Sí, siempre | Reindexa |
 | `test_ai_tool` (HTTP o Apps Script) | No | Llamada real al sistema o al script del dueño, con la credencial o la clave guardada. Si escribe, escribe |
-| `create_agent`, `update_agent`, `create_team`, `update_team`, `save_team_graph`, `create_ai_tool`, `update_ai_tool`, `create_knowledge_category`, `update_knowledge_category`, `transition_knowledge_document` | No | Escriben al instante en la cuenta de producción |
+| `create_agent`, `update_agent`, `publish_agent_prompt`, `create_team`, `update_team`, `save_team_graph`, `create_ai_tool`, `update_ai_tool`, `create_knowledge_category`, `update_knowledge_category`, `transition_knowledge_document` | No | Escriben al instante en la cuenta de producción. `update_agent` con `instructions` y `publish_agent_prompt` cambian lo que el agente responde desde el siguiente mensaje |
+| `save_agent_prompt_draft` | No | Solo guarda el borrador: lo que atiende no cambia hasta publicar |
+| `create_custom_field`, `upload_agent_image` | No | Crean un campo de la ficha (no se puede editar ni borrar por aquí) o suben una foto al gestor de archivos (repetir sube otra) |
 | `delete_agent`, `delete_team`, `delete_ai_tool`, `delete_knowledge_category`, `delete_knowledge_document` | No | Irreversibles. Borrar una categoría borra sus documentos |
-| `validate_team`, `get_agent_schema`, `list_agents`, `get_agent`, `list_teams`, `get_team`, `list_ai_tools`, `list_knowledge_categories`, `list_knowledge_documents`, `get_knowledge_document`, `list_knowledge_document_versions`, `get_ai_config`, `get_ai_balance` | No | No |
+| `validate_team`, `get_agent_schema`, `list_agents`, `get_agent`, `list_agent_prompt_versions`, `diff_agent_prompt`, `list_agent_images`, `list_custom_fields`, `list_teams`, `get_team`, `list_ai_tools`, `list_knowledge_categories`, `list_knowledge_documents`, `get_knowledge_document`, `list_knowledge_document_versions`, `get_ai_config`, `get_ai_balance` | No | No |
 | Demostración pública del equipo (panel) | Sí, con cupo diario | No ejecuta acciones reales |
 | Importar de Drive (panel, estudio de conocimiento) | Sí, al indexar cada documento y en cada sincronización que traiga un cambio | El documento entra con la búsqueda encendida; quitarlo de la lista de Drive lo retira del índice |
 

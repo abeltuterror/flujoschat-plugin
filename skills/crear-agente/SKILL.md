@@ -20,11 +20,11 @@ suscripción activa. Lo que gasta saldo de IA se anuncia antes de hacerlo.
 ## 0. Antes de empezar (no se salta)
 
 1. Llama a `get_agent_schema`. Siempre, en esta conversación, aunque creas recordarlo.
-2. Inventario: `list_agents`, `list_ai_tools`, `list_knowledge_categories`, `list_teams`.
+2. Inventario: `list_agents`, `list_ai_tools`, `list_knowledge_categories`, `list_teams` y,
+   si el agente va a usar datos del cliente, `list_custom_fields`.
    - Si ya hay un agente con ese nombre o ese trabajo, propón `actualizar-agente`.
-   - Anota las filas de tipo `BUILTIN` (capacidades integradas: agenda, botones, contacto,
-     flujos y las de Google) con su id: son las que el dueño ya activó en el panel. Las que no
-     estén NO se crean por este canal.
+   - Anota las filas de tipo `BUILTIN` (capacidades integradas) con su id: ya están encendidas
+     y se reutilizan. Una que falte se enciende en la puerta 1 con `create_ai_tool`.
 3. `get_ai_balance`: te da el modo de IA (incluida o clave propia) y el saldo. Si responde que
    requiere rol OWNER o ADMIN, este usuario tampoco podrá crear nada: dilo ahora y ofrece
    entregar el prompt en texto para que lo pegue un administrador. `get_ai_config` solo enseña
@@ -48,8 +48,9 @@ FILTRADO para su negocio: 5 a 8 líneas, en lenguaje de cliente, sin nombres de 
 cada una con qué logra · dónde se activa (aquí o en el panel) · si gasta saldo. Pregunta cuáles
 quiere para este agente. Con eso, haz la ronda 2 del cuestionario.
 
-Antes de seguir: cada capacidad elegida está en `list_ai_tools` (integrada), se va a crear aquí
-(HTTP, MCP o `APPS_SCRIPT`) o queda anotada como pendiente del panel con su enlace.
+Antes de seguir: cada capacidad elegida ya está en `list_ai_tools` o se va a crear aquí
+(integrada, HTTP, MCP o `APPS_SCRIPT`), y lo que solo se configura en el panel (horario de la
+agenda, hojas elegidas, conexión de Google, credenciales) queda anotado como pendiente con su enlace.
 
 ## 3. Diseñar antes de escribir
 
@@ -63,13 +64,22 @@ Antes de seguir: cada capacidad elegida está en `list_ai_tools` (integrada), se
   `params` como lista de definiciones de argumentos (el esquema lo explica); NUNCA una credencial
   ni la clave compartida de un Apps Script, ni en `config` ni en cabeceras: se añade en el panel
   después. Empieza por herramientas de solo lectura.
-- **Capacidades integradas:** solo se atan con `toolIds` si ya existen como fila. Comprueba sus
-  prerrequisitos en `get_agent_schema` (agenda configurada, campos personalizados, flujos con
-  descripción, cuenta de Google conectada con sus hojas o documentos elegidos). Dos reglas de
+- **Capacidades integradas:** si no existe la fila, se enciende con `create_ai_tool` (tipo
+  `BUILTIN`, `config` con su clave); existe una por empresa. Comprueba sus prerrequisitos en
+  `get_agent_schema`: encenderla no configura nada (agenda, campos, flujos con descripción, cuenta
+  de Google con sus hojas o documentos elegidos siguen siendo del panel). Para un servidor MCP,
+  decide con `allowedTools` qué funciones ve el agente. Catálogo completo y cómo usarlas:
+  `catalogo-capacidades.md`. Dos reglas de
   combinación: `google_sheets_actualizar` sin `google_sheets_consultar` no tiene de dónde sacar la
   fila; y `google_gmail_escribir_cliente` no se ata a un agente que lee datos de otros clientes
   (hojas, Drive), porque lo que lee puede acabar en el correo.
-- **Variables:** pide los nombres exactos de los campos personalizados y conviértelos a slug.
+- **Variables y ficha:** los campos salen de `list_custom_fields` (su nombre es el marcador
+  `{{campo.<slug>}}` y lo que rellena la capacidad contacto). Si falta uno, se crea con
+  `create_custom_field` en la puerta 1; no se edita ni se borra por aquí, así que nombre y tipo
+  se deciden antes.
+- **Fotos:** si el agente va a enviar imágenes, `list_agent_images` (reutilizar) o
+  `upload_agent_image` (subir), y en el agente `imageAttachments` con nombre y CUÁNDO enviarla,
+  más la capacidad imagenes atada.
 - **Modelo:** `null` (el default de la empresa) salvo motivo. Solo los modelos que lista el
   esquema; con la IA incluida, otro se cambia por el default sin avisar.
 - **`handoffDescription`:** solo si va a recibir derivaciones dentro de un equipo. Tercera
@@ -82,7 +92,9 @@ categorías, documentos) completas.
 
 Lee `${CLAUDE_PLUGIN_ROOT}/references/buenas-practicas-prompt.md` (obligatorio) y elige una
 base en `${CLAUDE_PLUGIN_ROOT}/references/plantillas-prompt.md`. Escribe el prompt completo y
-pásalo por la checklist final de la guía antes de mostrarlo. No pongas: la fecha o la hora (la
+pásalo por la checklist final de la guía antes de mostrarlo. Si el tono o el contexto cambian
+según un dato del cliente, usa condiciones (`{{#if campo.x == "valor"}}`, § 6 bis de la guía), nunca
+para conceder algo. No pongas: la fecha o la hora (la
 plataforma añade la fecha sola), definiciones de las herramientas (llegan con la suya), precios
 o catálogo (van a conocimiento), direcciones o claves (van a herramientas).
 
@@ -91,8 +103,10 @@ o catálogo (van a conocimiento), direcciones o claves (van a herramientas).
 Muestra la lista: herramientas (nombre, dirección, argumentos), categorías, documentos (título y
 tamaño) y el aviso "indexar N documentos gasta saldo". Espera un sí explícito. Luego, en orden:
 
-1. `create_ai_tool` y, si el dueño quiere probarla, `test_ai_tool` avisando de que una
-   herramienta HTTP o Apps Script se ejecuta de verdad (una MCP solo lista sus funciones).
+1. `create_ai_tool`: las capacidades integradas que falten y las herramientas HTTP, MCP o Apps
+   Script. Si el dueño quiere probar una, `test_ai_tool` avisando de que una HTTP o Apps Script
+   se ejecuta de verdad (una MCP solo lista sus funciones y cuáles recibe el agente).
+   Campos nuevos con `create_custom_field` y fotos con `upload_agent_image`.
 2. `create_knowledge_category` y `create_knowledge_document` (texto plano).
 3. `list_knowledge_documents` hasta ver el documento listo: nace pendiente, no lo des por listo.
 
@@ -147,11 +161,12 @@ Tabla de fragmento de error → qué hacer, y qué gasta saldo:
 - "Quiero un bot que responda dudas de mis productos" → paso 0 → ronda 1 → menú (conocimiento,
   botones, ficha) → ronda 2 → documentos en texto → puerta 1 → prompt → puerta 2 →
   `create_agent` → ofrecer equipo y flujo.
-- "Que agende citas" → en `list_ai_tools` busca la capacidad de agenda; si no está, primero el
-  panel (activarla y configurar la agenda); luego `toolIds` y la política de agenda en el prompt.
+- "Que agende citas" → en `list_ai_tools` busca la capacidad de agenda; si no está, se enciende
+  en la puerta 1; el horario y los profesionales se configuran en el panel; `toolIds` del agente
+  con ella y la política de agenda en el prompt.
 - "Que busque el pedido en mi hoja de Google" → en `list_ai_tools` busca `google_sheets_consultar`;
-  si no está, primero el panel (conectar Google, elegir la hoja, activar la capacidad); luego
-  `toolIds` y, en el prompt, por qué dato buscar y que no le dé a nadie datos de otras filas.
+  si no está, se enciende en la puerta 1, y en el panel se conecta Google y se elige la hoja;
+  luego `toolIds` y, en el prompt, por qué dato buscar y que no le dé a nadie datos de otras filas.
 - "Conéctalo a mi API de pedidos" → `create_ai_tool` de solo lectura sin credencial →
   `test_ai_tool` con aviso → el dueño pone la clave en el panel → política en el prompt.
 - "Usa el modelo más potente" → modo con `get_ai_balance` y lista del esquema; avisa el coste;

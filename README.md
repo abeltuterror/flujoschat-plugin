@@ -90,7 +90,7 @@ backend + `/api/v1/mcp`. El servidor publica su metadata OAuth en:
 | Qué | Dónde |
 |---|---|
 | Credenciales de una herramienta HTTP o MCP, y la clave compartida de una herramienta Apps Script | `/dashboard/ai/tools` → ficha de la herramienta |
-| Activar una capacidad integrada (agenda, botones, ficha del cliente, flujos y las de Google: Calendar, Gmail, Sheets y Drive) | `/dashboard/ai/tools` → capacidad del sistema |
+| Los ajustes de cada capacidad integrada: horario de la agenda, hojas y documentos de Google elegidos, correos de aviso, números del dueño (encenderla también se puede desde Claude) | Su pantalla en el panel |
 | Conectar tu cuenta de Google y elegir las hojas, documentos y carpetas que usa el agente | Configuración → Integraciones → Google |
 | Permitir que la IA escriba al cliente por correo | Configuración → Personalizar panel |
 | Subir archivos a la base de conocimiento | `/dashboard/ai/knowledge` |
