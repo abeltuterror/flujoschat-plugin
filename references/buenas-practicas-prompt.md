@@ -225,7 +225,9 @@ Escribe una política solo para las capacidades que el agente tiene atadas de ve
 `update_agent` con `instructions` publica AL MOMENTO: el siguiente mensaje de un cliente ya usa el
 texto nuevo. Para un agente que atiende de verdad, el camino recomendado es: [F19]
 
-1. `save_agent_prompt_draft` con el texto completo nuevo. Lo publicado sigue atendiendo.
+1. `save_agent_prompt_draft` con el texto completo nuevo y `basedOnVersion` (la versión publicada que
+   leíste con `list_agent_prompt_versions`; obligatorio al empezar un borrador o con `rebase`). Si se
+   publicó otra entretanto, falla: compara antes de seguir. Lo publicado sigue atendiendo.
 2. `diff_agent_prompt` (por defecto, publicado contra borrador): enséñale al dueño SOLO lo que
    cambia, con `+` y `-`, en vez de dos prompts enteros.
 3. Con su sí, `publish_agent_prompt` con una `note` corta de qué cambia y por qué ("no da
