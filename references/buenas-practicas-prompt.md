@@ -114,7 +114,13 @@ una categoría de conocimiento "Tratamientos y precios"; variables `{{cliente.no
 ## 6. Variables y el valor "(sin dato)"
 
 - Solo existen `{{cliente.nombre}}`, `{{cliente.telefono}}` y `{{campo.<slug>}}`, con doble
-  llave y con su prefijo. Cualquier otra llave se queda literal. [F16]
+  llave y con su prefijo. Una llave doble sin prefijo (`{{ nombre }}`) se queda literal: sirve
+  para escribirle al modelo un ejemplo o una plantilla, pero no es un dato. [F16]
+- Un marcador puede llevar un valor de reserva: `{{cliente.nombre|default("amigo")}}` escribe
+  "amigo" cuando el dato está vacío, en vez de `(sin dato)`. Es el único filtro que existe
+  (nada de mayúsculas ni recortes). Úsalo para que una frase suene natural, nunca para inventar
+  un dato: un documento o un teléfono de reserva es un dato falso. Donde el modelo tenga que
+  SABER que falta algo, deja el marcador sin reserva. [F17]
 - El slug es el nombre del campo personalizado en minúsculas, sin acentos y con guiones bajos.
   Verifícalo con el dueño antes de escribirlo.
 - Escribe cada marcador como "Etiqueta: {{…}}". Bien: "Documento: {{campo.dni}}". Mal: "Su DNI
@@ -146,23 +152,74 @@ Ya tienes su documento: no se lo vuelvas a pedir.
 {{/if}}
 ```
 
-- Tres formas: `{{#if campo.x}}` (tiene valor), `{{#if campo.x == "valor"}}` y
-  `{{#if campo.x != "valor"}}`. También con `cliente.` (`{{#if cliente.nombre}}`). `{{else}}` es
-  opcional y se cierra siempre con `{{/if}}`.
-- Solo comillas DOBLES. Comparan sin distinguir mayúsculas, tildes ni espacios ("miraflores" casa
-  con "Miraflores"). No hay and/or, ni números, ni mayor/menor: anida (hasta 5 niveles) o cambia
-  el diseño.
-- Una condición mal escrita (sin cerrar, comillas simples, sin `campo.`) hace FALLAR la creación,
-  la actualización o la publicación, y el error dice la línea. Un borrador sí se guarda roto
-  (avisa), pero no se puede publicar.
+- **Dos formas de escribir lo mismo**, y se pueden mezclar en un prompt:
+
+  | | Forma de llaves | Forma Jinja |
+  |---|---|---|
+  | abrir | `{{#if CONDICIÓN}}` | `{% if CONDICIÓN %}` |
+  | otra rama | `{{else if CONDICIÓN}}` | `{% elif CONDICIÓN %}` |
+  | si no | `{{else}}` | `{% else %}` |
+  | cerrar | `{{/if}}` | `{% endif %}` |
+
+  Las ramas intermedias y el "si no" son opcionales; el orden es siempre abrir, ramas, "si no",
+  cerrar. Una etiqueta sola en su línea no deja una línea en blanco.
+- **La condición** usa un dato (`cliente.<dato>` o `campo.<slug>`) solo (¿tiene valor?) o
+  comparado con `==` / `!=` contra un texto entre comillas, simples o dobles. Se combinan con
+  `and`, `or`, `not` y paréntesis (`not` pesa más que `and`, y `and` más que `or`). El dato
+  puede llevar su valor de reserva: `campo.sede|default("Miraflores") == "Miraflores"` es
+  verdadera cuando la sede está vacía. `true` y `false` solo van detrás de `==`/`!=` o dentro
+  de `default(…)` (`campo.vip|default(false)`), nunca solos: para apagar un bloque, usa un
+  comentario.
+- Comparan sin distinguir mayúsculas, tildes ni espacios sobrantes ("miraflores" casa con
+  "Miraflores"). No hay números, ni mayor/menor, ni "contiene".
+- Topes: hasta 5 condiciones anidadas, y cada condición hasta 300 caracteres y 10 datos. Un texto
+  entre comillas no puede llevar `}}` ni `%}`.
+
+```text
+{% if campo.plan == "empresa" or campo.plan == "pro" %}
+Trátalo de usted y ve al detalle.
+{% elif not cliente.nombre %}
+Pregúntale su nombre antes de seguir.
+{% else %}
+Tutéalo y ve al grano.
+{% endif %}
+```
+
+- Una condición o etiqueta mal escrita hace FALLAR la creación, la actualización o la
+  publicación, y el error dice la línea («Plantilla del prompt inválida»). Un borrador sí se
+  guarda roto (avisa), pero no se puede publicar. Los más comunes:
+  - un dato sin `cliente.` ni `campo.`:
+    «Variable desconocida en la condición: solo cliente.<dato> o campo.<dato>»
+  - una etiqueta que no existe:
+    «Etiqueta no admitida: solo if, elif, else y endif (ni for, ni set, ni macros)»
+  - un if sin cerrar, un else o elif sin su if, o un filtro que no es `default`.
+
+**Comentarios.** Lo que va entre `{#` y `#}` es una nota del autor: se quita antes de que el
+modelo lea el prompt, así que no gasta nada ni le llega nunca. Sirve para explicar por qué está
+una regla ("{# lo pidió el dueño tras el reclamo de marzo #}") o para apagar un bloque sin
+borrarlo. Puede ocupar varias líneas. Un comentario sin cerrar hace fallar el guardado:
+«Falta cerrar un comentario: termina con #}». No pongas en un comentario nada secreto: el
+prompt, con sus comentarios, lo ve cualquiera que edite el agente.
+
+**Si vienes de Jinja.** Puedes pegar tal cual los comentarios `{# … #}` y los bloques
+`{% if %}` / `{% elif %}` / `{% else %}` / `{% endif %}`, con `and`, `or`, `not` y
+`|default`. Lo que hay que cambiar:
+
+- Cada variable se reescribe como `cliente.<dato>` o `campo.<slug>`. Las variables de otro
+  sistema (`{{ nombre }}`, `{% if snapshot %}`) no existen aquí: en un marcador `{{ }}` se quedan
+  literales, y dentro de una condición hacen fallar el guardado. Si el dato hace falta, créalo
+  como campo de la ficha y úsalo como `campo.<slug>`.
+- `{% set %}`, `{% for %}`, macros, `include` y cualquier filtro que no sea `default` no
+  existen: quítalos. Un bucle suele ser un dato que va al conocimiento; un `set`, una frase
+  escrita directamente.
 - **Para tono y contexto, nunca para conceder algo.** El valor lo teclea el cliente o lo captura
   un flujo de lo que escribió: "si {{campo.vip}} es sí, haz descuento" es regalar el descuento a
   quien escriba "sí". Lo que da derechos (precios especiales, excepciones) se consulta en tu
   sistema con una herramienta.
 - **Sin valor, el campo cuenta como vacío**: `{{#if campo.x}}` y `== "valor"` salen falsas, pero
-  **`!= "valor"` sale VERDADERA** (vacío no es "valor"). Pasa en una prueba con `run_team` (no hay
-  cliente) y con un cliente real que no tiene ese dato: escribe cada condición pensando en ese
-  caso. La rama que depende de un dato concreto solo se ve en una conversación real con ese dato.
+  **`!= "valor"` y `not campo.x` salen VERDADERAS** (vacío no es "valor"), y si el dato lleva
+  `|default(…)` se usa la reserva. Pasa en una prueba con `run_team` (no hay cliente) y con un
+  cliente real que no tiene ese dato: escribe cada condición pensando en ese caso. La rama que depende de un dato concreto solo se ve en una conversación real con ese dato.
 - Úsalas con medida: dos o tres por prompt. Si cada cliente necesita un prompt distinto, son dos
   agentes (o un dato en el conocimiento), no veinte condiciones.
 
@@ -259,7 +316,8 @@ borrador queda desfasado y publicarlo FALLA, porque desharía ese cambio. Compar
 - [ ] Una política por cada capacidad atada, y ninguna política de capacidades que NO tiene.
 - [ ] Variables con el patrón "Etiqueta: {{…}}" y slugs verificados con el dueño
       (`list_custom_fields`).
-- [ ] Condiciones bien cerradas, con comillas dobles, y ninguna que conceda algo.
+- [ ] Condiciones bien cerradas, solo con `cliente.`/`campo.`, y ninguna que conceda algo.
+- [ ] Nada de `{% set %}`, `{% for %}` ni filtros que no sean `default`; comentarios cerrados.
 - [ ] Ninguna instrucción que dependa de una capacidad que el agente no tiene atada.
 - [ ] Sin fecha ni hora, sin reglas por hora.
 - [ ] Sin precios, catálogo ni políticas largas (eso va a conocimiento).
@@ -282,6 +340,6 @@ borrador queda desfasado y publicarlo FALLA, porque desharía ese cambio. Compar
 | F13 | Búsqueda automática si hay categorías | `backend/src/modules/ai/runtime/agent-builder.js` | 2026-09-05 |
 | F14 | El prompt no es un cortafuegos; bloque propio en la demo | `backend/src/modules/ai/runtime/agent-builder.js` | 2026-09-05 |
 | F16 | Variables, `(sin dato)`, saneado, no fiarse del valor | `docs/referencia/variables-de-prompt.md`, `backend/src/modules/ai/runtime/prompt-variables.js` | 2026-09-05 |
-| F17 | Condiciones `{{#if}}`…`{{else}}`…`{{/if}}`: sintaxis, comparación, fallo con la línea, sin valor el campo cuenta como vacío (`!=` verdadera) | `docs/referencia/variables-de-prompt.md`, `backend/src/modules/ai/runtime/prompt-variables.js` | 2026-10-26 |
+| F17 | Condiciones en las dos formas (`{{#if}}`/`{{else if}}`/`{{else}}`/`{{/if}}` y `{% if %}`/`{% elif %}`/`{% else %}`/`{% endif %}`), `and`/`or`/`not`, comillas simples o dobles, valor de reserva `default`, comentarios `{# #}`, topes y mensajes de error; sin valor el campo cuenta como vacío (`!=` verdadera) | `docs/referencia/variables-de-prompt.md`, `backend/src/modules/ai/runtime/prompt-variables.js` | 2026-10-26 |
 | F18 | Fotos del agente y su campo `cuando` | `backend/src/modules/mcp/agent-schema.js` | 2026-10-26 |
 | F19 | Borrador, diff, publicar y restaurar versiones del prompt | `docs/referencia/prompt-versiones.md`, `backend/src/modules/mcp/tools/ai.tools.js` | 2026-10-26 |

@@ -44,7 +44,9 @@ informe. No cambias nada.
    modo?
 6. Pasa el prompt por la checklist y por la tabla de síntomas. Busca en concreto: marcadores mal
    escritos (solo `{{cliente.nombre}}`, `{{cliente.telefono}}` y `{{campo.<slug>}}`),
-   condiciones que conceden algo o con comillas simples, una herramienta MCP sin `allowedTools`
+   condiciones que conceden algo, variables o etiquetas pegadas de Jinja que aquí no existen
+   (sin `cliente.`/`campo.`, `{% set %}`, `{% for %}`), un valor de reserva `default` que se
+   inventa un dato, una herramienta MCP sin `allowedTools`
    que expone funciones de escritura que el agente no necesita, fotos sin la capacidad imagenes, fecha u
    hora escritas a mano, precios o catálogo dentro del prompt, direcciones o claves, políticas
    de capacidades que no tiene, capacidades atadas sin política, `google_sheets_actualizar` sin

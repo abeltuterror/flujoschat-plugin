@@ -93,8 +93,9 @@ categorías, documentos) completas.
 Lee `${CLAUDE_PLUGIN_ROOT}/references/buenas-practicas-prompt.md` (obligatorio) y elige una
 base en `${CLAUDE_PLUGIN_ROOT}/references/plantillas-prompt.md`. Escribe el prompt completo y
 pásalo por la checklist final de la guía antes de mostrarlo. Si el tono o el contexto cambian
-según un dato del cliente, usa condiciones (`{{#if campo.x == "valor"}}`, § 6 bis de la guía), nunca
-para conceder algo. No pongas: la fecha o la hora (la
+según un dato del cliente, usa condiciones (`{{#if campo.x == "valor"}}` o `{% if … %}`, § 6 bis
+de la guía), nunca para conceder algo. Si el dueño trae un prompt escrito en Jinja, sigue el
+apartado "Si vienes de Jinja" de esa sección. No pongas: la fecha o la hora (la
 plataforma añade la fecha sola), definiciones de las herramientas (llegan con la suya), precios
 o catálogo (van a conocimiento), direcciones o claves (van a herramientas).
 

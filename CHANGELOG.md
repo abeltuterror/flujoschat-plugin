@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.5.0 — 2026-10-26
+
+Plantillas del prompt al estilo Jinja. Requiere el servidor con el motor nuevo de plantillas
+(PR #387 de chatboxabel y las ramas `feat/prompt-jinja-*`).
+
+- **Nuevo** en `references/buenas-practicas-prompt.md`, § 6 bis:
+  - las dos formas de condición, `{{#if}}` / `{{else if}}` / `{{else}}` / `{{/if}}` y
+    `{% if %}` / `{% elif %}` / `{% else %}` / `{% endif %}`, con `and`, `or`, `not`,
+    paréntesis, comillas simples o dobles, `true` / `false` y sus topes;
+  - comentarios `{# … #}`: notas del autor que el modelo nunca lee, sirven para apagar un bloque;
+  - "Si vienes de Jinja": qué se pega tal cual y qué hay que reescribir (variables a
+    `cliente.`/`campo.`, fuera `set`, `for`, macros y otros filtros).
+- **Nuevo** en § 6: valor de reserva `{{campo.x|default("…")}}` en vez de `(sin dato)`, y cuándo
+  no usarlo (nunca para inventar un dato).
+- **Corregido**: las comillas simples ya no son un error; el auditor y la tabla de errores dejan
+  de señalarlas. La tabla de errores añade «Variable desconocida en la condición» y
+  «Etiqueta no admitida».
+
 ## 1.4.0 — 2026-10-26
 
 Cómo escribir un buen prompt, qué conectores hay y cómo usarlos. Requiere el servidor con las
